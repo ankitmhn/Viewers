@@ -116,7 +116,13 @@ const _addSeriesToStudy = (studyMetadata, series) => {
     extensionManager.modules['sopClassHandlerModule'];
   const study = studyMetadata.getData();
   const seriesMetadata = new OHIFSeriesMetadata(series, study);
-  studyMetadata.addSeries(seriesMetadata);
+  const existingSeries = studyMetadata.getSeriesByUID(series.SeriesInstanceUID);
+  if (existingSeries) {
+    studyMetadata.updateSeries(series.SeriesInstanceUID, seriesMetadata);
+  } else {
+    studyMetadata.addSeries(seriesMetadata);
+  }
+
   studyMetadata.createAndAddDisplaySetsForSeries(
     sopClassHandlerModules,
     seriesMetadata,

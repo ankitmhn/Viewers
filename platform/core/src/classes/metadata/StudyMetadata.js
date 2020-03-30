@@ -407,6 +407,30 @@ export class StudyMetadata extends Metadata {
   }
 
   /**
+   * Update a series in the current study by SeriesInstanceUID.
+   * @param {String} SeriesInstanceUID The SeriesInstanceUID to be updated
+   * @param {SeriesMetadata} series The series to be added to the current study.
+   * @returns {boolean} Returns true on success, false otherwise.
+   */
+  updateSeries(SeriesInstanceUID, series) {
+    const index = this._series.findIndex(series => {
+      return series.getSeriesInstanceUID() === SeriesInstanceUID;
+    });
+
+    if (index < 0) {
+      return false;
+    }
+
+    if (!(series instanceof SeriesMetadata)) {
+      throw new Error('Series must be an instance of SeriesMetadata');
+    }
+
+    this._series[index] = series;
+
+    return true;
+  }
+
+  /**
    * Find a series by index.
    * @param {number} index An integer representing a list index.
    * @returns {SeriesMetadata} Returns a SeriesMetadata instance when found or undefined otherwise.
